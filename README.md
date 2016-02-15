@@ -5,7 +5,7 @@ Reversi game in python (ACA Semester project, IIT Kanpur,India)
 A semester project offers an opportunity to learn something new and improve our skills  
 The Project :
 #### Create a Reversi game using Python
- [Reversi][https://en.wikipedia.org/wiki/Reversi]
+ [Reversi](https://en.wikipedia.org/wiki/Reversi) : A two player game involving capture of pieces.
 
 ## Project Milestones
 * Create a simple two player game using pygame
