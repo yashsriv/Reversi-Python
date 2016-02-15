@@ -11,7 +11,7 @@ The Project :
 * Create a simple two player game using pygame
 * Create a AI for single player game
 * If time permits, two player network game using sockets.
----
+
 ## Contribution Rules
 * All code should be python3
 * Please ensure that your code uses spaces instead of tabs.  
