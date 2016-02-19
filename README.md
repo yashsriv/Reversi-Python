@@ -12,12 +12,5 @@ The Project :
 * Create a AI for single player game
 * If time permits, two player network game using sockets.
 
-## Contribution Rules
-* All code should be python3
-* Please ensure that your code uses spaces instead of tabs.  
-  (All major text editors support this feature)
-* Indentation Level = 2 everywhere
-* Variable names should be meaningful
-* Non-Trivial portions of code should be properly documented
-* Commit messages should be meaningful and should properly  
-  mention changes to the code.
+## [Contribution Rules](https://github.com/yashsriv/Reversii-Python/blob/development/contribution.markdown)
+* See the link above
