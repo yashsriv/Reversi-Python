@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import pygame, sys
 from pygame.locals import *
 from board import *
@@ -9,7 +10,7 @@ BG_COLOR = (76, 175, 80)
 def draw_board(r):
     for i in range(8):
         for j in range(8):
-            pygame.draw.rect(WINDOW, BG_COLOR, (j * 80 + 2, i * 80 + 2, 76, 76))
+            pygame.draw.rect(WINDOW, BG_COLOR, (j * 80 + 1, i * 80 + 1, 78, 78))
             if r.b[i][j] == WHITE:
                 pygame.draw.circle(WINDOW, W_COLOR, (j * 80 + 40, i * 80 + 40), 30)
             elif r.b[i][j] == BLACK:
@@ -24,8 +25,8 @@ def main():
     fps = pygame.time.Clock()
     draw_board(reversi)
     pygame.display.update()
-    
-    while True:
+
+    while not reversi.is_game_over():
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
