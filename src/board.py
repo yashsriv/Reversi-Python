@@ -39,12 +39,22 @@ class board():
 
     def is_game_over(self):
         if len(self.legal_moves) == 0:
+            self.who_wins()
             return True
         for i in range(8):
             for j in range(8):
                 if self.b[i][j] == EMPTY:
                     return False
+        self.who_wins()
         return True
+
+    def who_wins(self):
+        a = sum(l.count(BLACK) for l in self.b)
+        b = sum(l.count(WHITE) for l in self.b)
+        if a > b:
+            print('Black Wins!!')
+        else:
+            print('White Wins!!')
 
     def calc_legal_moves(self):
         self.legal_moves = []
