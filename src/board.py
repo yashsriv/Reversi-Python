@@ -52,9 +52,9 @@ class board():
         a = sum(l.count(BLACK) for l in self.b)
         b = sum(l.count(WHITE) for l in self.b)
         if a > b:
-            print('Black Wins!!')
+            self.winner = BLACK
         else:
-            print('White Wins!!')
+            self.winner = WHITE
 
     def calc_legal_moves(self):
         self.legal_moves = []
