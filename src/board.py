@@ -1,10 +1,15 @@
+"""
+Module which contains the definition of board and board constants
+"""
 EMPTY = 'empty'
 BLACK = 'black'
 WHITE = 'white'
 class board():
-
+    """
+    Class representating the reversi board in memorcurrent_col
+    """
     def __init__(self):
-        self.b = [[EMPTY for x in range(8)] for y in range(8)]  # Create 2d board
+        self.b = [[EMPTY for current_row in range(8)] for current_col in range(8)]  # Create 2d board
         self.b[3][3] = WHITE
         self.b[4][4] = WHITE
         self.b[3][4] = BLACK
@@ -12,32 +17,30 @@ class board():
         self.turn = BLACK
         self.legal_moves = []
         self.calc_legal_moves()
+        self.winner = None
 
-    def display_board(self):
-        for i in range(8):
-            for j in range(8):
-                if(self.b[i][j] == EMPTY):
-                    print('.',end = ' ')
-                elif(self.b[i][j] == BLACK):
-                    print('X',end = ' ')
-                elif(self.b[i][j] == WHITE):
-                    print('O',end = ' ')
-            print('')
-
-    def is_legal_move(self,mov):
-        (x, y) = mov
+    def is_legal_move(self, mov):
+        """
+        Checks if a move is legal
+        """
         if mov in self.legal_moves:
             return True
         else:
             return False
 
     def change_turn(self):
+        """
+        Switches current placurrent_coler
+        """
         if self.turn == BLACK:
             self.turn = WHITE
-        else :
+        else:
             self.turn = BLACK
 
     def is_game_over(self):
+        """
+        Checks if game is over
+        """
         if len(self.legal_moves) == 0:
             self.who_wins()
             return True
@@ -49,266 +52,279 @@ class board():
         return True
 
     def who_wins(self):
-        a = sum(l.count(BLACK) for l in self.b)
-        b = sum(l.count(WHITE) for l in self.b)
-        if a > b:
+        """
+        Checks who is the winner as per count of tokens
+        """
+        count_black = sum(l.count(BLACK) for l in self.b)
+        count_white = sum(l.count(WHITE) for l in self.b)
+        if count_black > count_white:
             self.winner = BLACK
         else:
             self.winner = WHITE
 
     def calc_legal_moves(self):
+        """
+        Calculates legal moves bcurrent_col checking evercurrent_col position
+        """
         self.legal_moves = []
         for i in range(8):
             for j in range(8):
                 if self.b[i][j] == self.turn:
-                    self.check_pos(i,j)
+                    self.check_pos(i, j)
 
     def check_pos(self, row, col):
+        """
+        Checks whether current pos is at the end of ancurrent_col line
+        """
 
         # Horizontal right check
-        x = row
-        y = col + 1
+        current_row = row
+        current_col = col + 1
         count = 0
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY and count != 0:
-                self.legal_moves.append((x, y))
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY and count != 0:
+                self.legal_moves.append((current_row, current_col))
                 break
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+            if self.b[current_row][current_col] == EMPTY:
                 break
-            else :
+            if self.b[current_row][current_col] == self.turn:
+                break
+            else:
                 count += 1
-            y += 1
+            current_col += 1
         # Horizontal left check
-        x = row
-        y = col - 1
+        current_row = row
+        current_col = col - 1
         count = 0
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY and count != 0:
-                self.legal_moves.append((x, y))
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY and count != 0:
+                self.legal_moves.append((current_row, current_col))
                 break
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+            if self.b[current_row][current_col] == EMPTY:
                 break
-            else :
+            if self.b[current_row][current_col] == self.turn:
+                break
+            else:
                 count += 1
-            y -= 1
+            current_col -= 1
         # Vertical down check
-        x = row + 1
-        y = col
+        current_row = row + 1
+        current_col = col
         count = 0
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY and count != 0:
-                self.legal_moves.append((x, y))
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY and count != 0:
+                self.legal_moves.append((current_row, current_col))
                 break
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+            if self.b[current_row][current_col] == EMPTY:
                 break
-            else :
+            if self.b[current_row][current_col] == self.turn:
+                break
+            else:
                 count += 1
-            x += 1
+            current_row += 1
         # Vertical up check
-        x = row - 1
-        y = col
+        current_row = row - 1
+        current_col = col
         count = 0
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY and count != 0:
-                self.legal_moves.append((x, y))
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY and count != 0:
+                self.legal_moves.append((current_row, current_col))
                 break
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+            if self.b[current_row][current_col] == EMPTY:
                 break
-            else :
+            if self.b[current_row][current_col] == self.turn:
+                break
+            else:
                 count += 1
-            x -= 1
+            current_row -= 1
         # Diagonal NW check
-        x = row - 1
-        y = col - 1
+        current_row = row - 1
+        current_col = col - 1
         count = 0
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY and count != 0:
-                self.legal_moves.append((x, y))
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY and count != 0:
+                self.legal_moves.append((current_row, current_col))
                 break
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+            if self.b[current_row][current_col] == EMPTY:
                 break
-            else :
+            if self.b[current_row][current_col] == self.turn:
+                break
+            else:
                 count += 1
-            x -= 1
-            y -= 1
+            current_row -= 1
+            current_col -= 1
         # Diagonal NE check
-        x = row - 1
-        y = col + 1
+        current_row = row - 1
+        current_col = col + 1
         count = 0
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY and count != 0:
-                self.legal_moves.append((x, y))
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY and count != 0:
+                self.legal_moves.append((current_row, current_col))
                 break
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+            if self.b[current_row][current_col] == EMPTY:
                 break
-            else :
+            if self.b[current_row][current_col] == self.turn:
+                break
+            else:
                 count += 1
-            x -= 1
-            y += 1
+            current_row -= 1
+            current_col += 1
 
         # Diagonal SW check
-        x = row + 1
-        y = col - 1
+        current_row = row + 1
+        current_col = col - 1
         count = 0
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY and count != 0:
-                self.legal_moves.append((x, y))
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY and count != 0:
+                self.legal_moves.append((current_row, current_col))
                 break
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+            if self.b[current_row][current_col] == EMPTY:
                 break
-            else :
+            if self.b[current_row][current_col] == self.turn:
+                break
+            else:
                 count += 1
-            x += 1
-            y -= 1
+            current_row += 1
+            current_col -= 1
 
         # Diagonal SE check
-        x = row + 1
-        y = col + 1
+        current_row = row + 1
+        current_col = col + 1
         count = 0
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY and count != 0:
-                self.legal_moves.append((x, y))
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY and count != 0:
+                self.legal_moves.append((current_row, current_col))
                 break
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+            if self.b[current_row][current_col] == EMPTY:
                 break
-            else :
+            if self.b[current_row][current_col] == self.turn:
+                break
+            else:
                 count += 1
-            x += 1
-            y += 1
+            current_row += 1
+            current_col += 1
 
     def shift_color(self, l):
+        """
+        Flips token at a certain position
+        """
         for pos in l:
             self.b[pos[0]][pos[1]] = self.turn
 
     def make_move(self, row, col):
+        """
+        Makes move at a certain position
+        """
         self.b[row][col] = self.turn
 
         # Horizontal right check
-        x = row
-        y = col + 1
+        current_row = row
+        current_col = col + 1
         count = []
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY:
+                break
+            if self.b[current_row][current_col] == self.turn:
                 self.shift_color(count)
                 break
-            else :
-                count.append((x, y))
-            y += 1
+            else:
+                count.append((current_row, current_col))
+            current_col += 1
         # Horizontal left check
-        x = row
-        y = col - 1
+        current_row = row
+        current_col = col - 1
         count = []
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY:
+                break
+            if self.b[current_row][current_col] == self.turn:
                 self.shift_color(count)
                 break
-            else :
-                count.append((x, y))
-            y -= 1
+            else:
+                count.append((current_row, current_col))
+            current_col -= 1
         # Vertical down check
-        x = row + 1
-        y = col
+        current_row = row + 1
+        current_col = col
         count = []
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY:
+                break
+            if self.b[current_row][current_col] == self.turn:
                 self.shift_color(count)
                 break
-            else :
-                count.append((x, y))
-            x += 1
+            else:
+                count.append((current_row, current_col))
+            current_row += 1
         # Vertical up check
-        x = row - 1
-        y = col
+        current_row = row - 1
+        current_col = col
         count = []
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY:
+                break
+            if self.b[current_row][current_col] == self.turn:
                 self.shift_color(count)
                 break
-            else :
-                count.append((x, y))
-            x -= 1
+            else:
+                count.append((current_row, current_col))
+            current_row -= 1
         # Diagonal NW check
-        x = row - 1
-        y = col - 1
+        current_row = row - 1
+        current_col = col - 1
         count = []
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY:
+                break
+            if self.b[current_row][current_col] == self.turn:
                 self.shift_color(count)
                 break
-            else :
-                count.append((x, y))
-            x -= 1
-            y -= 1
+            else:
+                count.append((current_row, current_col))
+            current_row -= 1
+            current_col -= 1
         # Diagonal NE check
-        x = row - 1
-        y = col + 1
+        current_row = row - 1
+        current_col = col + 1
         count = []
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY:
+                break
+            if self.b[current_row][current_col] == self.turn:
                 self.shift_color(count)
                 break
-            else :
-                count.append((x, y))
-            x -= 1
-            y += 1
+            else:
+                count.append((current_row, current_col))
+            current_row -= 1
+            current_col += 1
 
         # Diagonal SW check
-        x = row + 1
-        y = col - 1
+        current_row = row + 1
+        current_col = col - 1
         count = []
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY:
+                break
+            if self.b[current_row][current_col] == self.turn:
                 self.shift_color(count)
                 break
-            else :
-                count.append((x, y))
-            x += 1
-            y -= 1
+            else:
+                count.append((current_row, current_col))
+            current_row += 1
+            current_col -= 1
 
         # Diagonal SE check
-        x = row + 1
-        y = col + 1
+        current_row = row + 1
+        current_col = col + 1
         count = []
-        while y < 8 and y > -1 and x > -1 and x < 8:
-            if self.b[x][y] == EMPTY:
-                break;
-            if self.b[x][y] == self.turn:
+        while current_col < 8 and current_col > -1 and current_row > -1 and current_row < 8:
+            if self.b[current_row][current_col] == EMPTY:
+                break
+            if self.b[current_row][current_col] == self.turn:
                 self.shift_color(count)
                 break
-            else :
-                count.append((x, y))
-            x += 1
-            y += 1
-
-
+            else:
+                count.append((current_row, current_col))
+            current_row += 1
+            current_col += 1
 
