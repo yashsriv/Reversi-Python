@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+GUI for Reversi Game Board as well as event handling
+"""
 import pygame, sys
 from pygame.locals import *
 from board import *
@@ -7,34 +10,49 @@ WINDOW = None
 W_COLOR = (255, 255, 255)
 B_COLOR = (0, 0, 0)
 BG_COLOR = (42, 83, 65)
-status = ''
+STATUS = ''
 TWO_PLAYER = False
 
 class Button():
+    """
+    A class representing a button
+    """
     def __init__(self, rectangular_area, on_focus_color, normal_color, text):
+        """
+        Give default values as per parameters passed
+        """
         self.rectang = rectangular_area
         self.on_focus = on_focus_color
         self.normal = normal_color
         self.text = text
     def draw(self, focus):
-        if focus :
+        """
+        Draw depending upon whether it is in focus or not
+        """
+        if focus:
             pygame.draw.rect(WINDOW, self.on_focus, self.rectang)
-        else :
+        else:
             pygame.draw.rect(WINDOW, self.normal, self.rectang)
         fontObj = pygame.font.SysFont('linuxlibertinedisplayo', 28)
-        textSurfaceObj = fontObj.render(self.text, True, (0,0,0))
+        textSurfaceObj = fontObj.render(self.text, True, (0, 0, 0))
         textRectObj = textSurfaceObj.get_rect()
         textRectObj.center = self.rectang.center
         WINDOW.blit(textSurfaceObj, textRectObj)
 
 def draw_buttons(buttons, mousex, mousey):
+    """
+    Call the draw function of all buttons
+    """
     for button in buttons:
         if button.rectang.collidepoint(mousex, mousey):
             button.draw(True)
-        else :
+        else:
             button.draw(False)
 
 def show_gui():
+    """
+    Draw initial gui
+    """
     done = False
     buttons = []
     buttons.append(Button(pygame.Rect(100, 320, 120, 40), (46, 125, 50), BG_COLOR, '1 Player'))
@@ -43,9 +61,9 @@ def show_gui():
     WINDOW.fill(BG_COLOR)
     logo = pygame.image.load('../res/logo.png')
     aca = pygame.image.load('../res/aca.png')
-    WINDOW.blit(logo, (90,40))
-    WINDOW.blit(aca, (0,460))
-    mousex, mousey = (0,0)
+    WINDOW.blit(logo, (90, 40))
+    WINDOW.blit(aca, (0, 460))
+    mousex, mousey = (0, 0)
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.locals.QUIT:
@@ -65,21 +83,25 @@ def show_gui():
                         else:
                             pygame.quit()
                             sys.exit()
-                pass
         draw_buttons(buttons, mousex, mousey)
         pygame.display.update()
 
 def main():
+    """
+    The main function
+    """
     global WINDOW
     pygame.init()
     WINDOW = pygame.display.set_mode((640, 640))
     pygame.display.set_caption('Reversi Game')
-    fps = pygame.time.Clock()
     show_gui()
     start_game()
 
 
 def draw_board(r):
+    """
+    Draw the board
+    """
     for i in range(8):
         for j in range(8):
             pygame.draw.rect(WINDOW, BG_COLOR, (j * 80 + 1, i * 80 + 1, 78, 78))
@@ -89,6 +111,9 @@ def draw_board(r):
                 pygame.draw.circle(WINDOW, B_COLOR, (j * 80 + 40, i * 80 + 40), 30)
 
 def draw_whose_turn(r):
+    """
+    Show whose turn it is at the bottom
+    """
     fontObj = pygame.font.SysFont('linuxlibertinedisplayo', 18)
     if r.turn == BLACK:
         turn = "Black's Turn"
@@ -105,14 +130,20 @@ def draw_whose_turn(r):
     WINDOW.blit(textSurfaceObj, textRectObj)
 
 def draw_status():
+    """
+    Show STATUS messages such as who won
+    """
     fontObj = pygame.font.SysFont('linuxlibertinedisplayo', 18)
-    textSurfaceObj = fontObj.render(status, True, B_COLOR, (46, 125, 60))
+    textSurfaceObj = fontObj.render(STATUS, True, B_COLOR, (46, 125, 60))
     textRectObj = textSurfaceObj.get_rect()
     textRectObj.center = (480, 660)
     pygame.draw.rect(WINDOW, (46, 125, 60), (textRectObj.left, 640 + 1, textRectObj.right - textRectObj.left, 38))
     WINDOW.blit(textSurfaceObj, textRectObj)
 
 def draw_count(r):
+    """
+    Show count of each player's tokens
+    """
     white = sum(l.count(WHITE) for l in r.b)
     black = sum(l.count(BLACK) for l in r.b)
     font_obj = pygame.font.SysFont('linuxlibertinedisplayo', 18)
@@ -122,7 +153,7 @@ def draw_count(r):
     text_surface_obj_2 = font_obj.render(str(white), True, B_COLOR, W_COLOR)
     text_rect_obj_2 = text_surface_obj_2.get_rect()
     text_rect_obj_2.center = (700, 80)
-    pygame.draw.rect(WINDOW, W_COLOR, ( 640 + 1, text_rect_obj.top, 98, text_rect_obj_2.bottom - text_rect_obj.top))
+    pygame.draw.rect(WINDOW, W_COLOR, (640 + 1, text_rect_obj.top, 98, text_rect_obj_2.bottom - text_rect_obj.top))
     WINDOW.blit(text_surface_obj, text_rect_obj)
     WINDOW.blit(text_surface_obj_2, text_rect_obj_2)
 
@@ -132,11 +163,14 @@ def draw_count(r):
     text_surface_obj_2 = font_obj.render(str(black), True, W_COLOR, B_COLOR)
     text_rect_obj_2 = text_surface_obj_2.get_rect()
     text_rect_obj_2.center = (700, 140)
-    pygame.draw.rect(WINDOW, B_COLOR, ( 640 + 1, text_rect_obj.top, 98, text_rect_obj_2.bottom - text_rect_obj.top))
+    pygame.draw.rect(WINDOW, B_COLOR, (640 + 1, text_rect_obj.top, 98, text_rect_obj_2.bottom - text_rect_obj.top))
     WINDOW.blit(text_surface_obj, text_rect_obj)
     WINDOW.blit(text_surface_obj_2, text_rect_obj_2)
 
 def start_game():
+    """
+    Start actual game loop
+    """
     reversi = board()
     global WINDOW
     WINDOW = pygame.display.set_mode((740, 680))
@@ -144,14 +178,14 @@ def start_game():
     WINDOW.fill(B_COLOR)
     fps = pygame.time.Clock()
     draw_board(reversi)
-    pygame.draw.rect(WINDOW, BG_COLOR, ( 1, 640 + 1, 638, 38))
-    pygame.draw.rect(WINDOW, BG_COLOR, ( 640 + 1, 1, 98, 678))
+    pygame.draw.rect(WINDOW, BG_COLOR, (1, 640 + 1, 638, 38))
+    pygame.draw.rect(WINDOW, BG_COLOR, (640 + 1, 1, 98, 678))
     pygame.display.update()
-    global status
-    status = 'Please Play your move'
+    global STATUS
+    STATUS = 'Please Play your move'
     buttons = []
     buttons.append(Button(pygame.Rect(640, 640, 100, 40), (46, 125, 50), BG_COLOR, 'Exit'))
-    mousex, mousey = (0,0)
+    mousex, mousey = (0, 0)
     while not reversi.is_game_over():
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -171,11 +205,11 @@ def start_game():
                     reversi.make_move(row, col)
                     reversi.change_turn()
                     reversi.calc_legal_moves()
-                    status = 'Please Play your move'
+                    STATUS = 'Please Play your move'
                 else:
-                    status = 'Invalid Move'
-        pygame.draw.rect(WINDOW, BG_COLOR, ( 1, 640 + 1, 638, 38))
-        pygame.draw.rect(WINDOW, BG_COLOR, ( 640 + 1, 1, 98, 678))
+                    STATUS = 'Invalid Move'
+        pygame.draw.rect(WINDOW, BG_COLOR, (1, 640 + 1, 638, 38))
+        pygame.draw.rect(WINDOW, BG_COLOR, (640 + 1, 1, 98, 678))
         draw_whose_turn(reversi)
         draw_status()
         draw_count(reversi)
@@ -184,10 +218,10 @@ def start_game():
         pygame.display.update()
         fps.tick(30)
     if reversi.winner == BLACK:
-        status = 'Black Wins'
+        STATUS = 'Black Wins'
         pic = pygame.image.load('../res/black_win.png')
-    else :
-        status = 'White Wins'
+    else:
+        STATUS = 'White Wins'
         pic = pygame.image.load('../res/white_win.png')
 
     while True:
@@ -202,12 +236,12 @@ def start_game():
                     if button.rectang.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
-        pygame.draw.rect(WINDOW, BG_COLOR, ( 1, 640 + 1, 638, 38))
+        pygame.draw.rect(WINDOW, BG_COLOR, (1, 640 + 1, 638, 38))
         draw_status()
         draw_board(reversi)
         alpha = WINDOW.convert_alpha()
-        alpha.blit(pic,(0,0))
-        WINDOW.blit(alpha,(0,0))
+        alpha.blit(pic, (0, 0))
+        WINDOW.blit(alpha, (0, 0))
         draw_buttons(buttons, mousex, mousey)
         pygame.display.update()
         fps.tick(30)
