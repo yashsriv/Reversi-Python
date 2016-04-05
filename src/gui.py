@@ -6,8 +6,79 @@ from board import *
 WINDOW = None
 W_COLOR = (255, 255, 255)
 B_COLOR = (0, 0, 0)
-BG_COLOR = (76, 175, 80)
+BG_COLOR = (42, 83, 65)
 status = ''
+TWO_PLAYER = False
+
+class Button():
+    def __init__(self, rectangular_area, on_focus_color, normal_color, text):
+        self.rectang = rectangular_area
+        self.on_focus = on_focus_color
+        self.normal = normal_color
+        self.text = text
+    def draw(self, focus):
+        if focus :
+            pygame.draw.rect(WINDOW, self.on_focus, self.rectang)
+        else :
+            pygame.draw.rect(WINDOW, self.normal, self.rectang)
+        fontObj = pygame.font.SysFont('linuxlibertinedisplayo', 28)
+        textSurfaceObj = fontObj.render(self.text, True, (0,0,0))
+        textRectObj = textSurfaceObj.get_rect()
+        textRectObj.center = self.rectang.center
+        WINDOW.blit(textSurfaceObj, textRectObj)
+
+def draw_buttons(buttons, mousex, mousey):
+    for button in buttons:
+        if button.rectang.collidepoint(mousex, mousey):
+            button.draw(True)
+        else :
+            button.draw(False)
+
+def show_gui():
+    done = False
+    buttons = []
+    buttons.append(Button(pygame.Rect(100, 320, 120, 40), (46, 125, 50), BG_COLOR, '1 Player'))
+    buttons.append(Button(pygame.Rect(300, 320, 120, 40), (46, 125, 50), BG_COLOR, '2 Player'))
+    buttons.append(Button(pygame.Rect(500, 320, 80, 40), (46, 125, 50), BG_COLOR, 'Exit'))
+    WINDOW.fill(BG_COLOR)
+    logo = pygame.image.load('../res/logo.png')
+    aca = pygame.image.load('../res/aca.png')
+    WINDOW.blit(logo, (90,40))
+    WINDOW.blit(aca, (0,460))
+    mousex, mousey = (0,0)
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.locals.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.locals.MOUSEMOTION:
+                mousex, mousey = event.pos
+            elif event.type == pygame.locals.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    if button.rectang.collidepoint(event.pos):
+                        if button.text == '1 Player':
+                            done = True
+                        elif button.text == '2 Player':
+                            global TWO_PLAYER
+                            TWO_PLAYER = True
+                            done = True
+                        else:
+                            pygame.quit()
+                            sys.exit()
+                pass
+        draw_buttons(buttons, mousex, mousey)
+        pygame.display.update()
+
+def main():
+    global WINDOW
+    pygame.init()
+    WINDOW = pygame.display.set_mode((640, 640))
+    pygame.display.set_caption('Reversi Game')
+    fps = pygame.time.Clock()
+    show_gui()
+    start_game()
+
+
 def draw_board(r):
     for i in range(8):
         for j in range(8):
@@ -59,9 +130,8 @@ def draw_count(r):
     WINDOW.blit(text_surface_obj, text_rect_obj)
     WINDOW.blit(text_surface_obj_2, text_rect_obj_2)
 
-def main():
+def start_game():
     reversi = board()
-    pygame.init()
     global WINDOW
     WINDOW = pygame.display.set_mode((740, 680))
     pygame.display.set_caption('Reversi Game')
@@ -73,13 +143,21 @@ def main():
     pygame.display.update()
     global status
     status = 'Please Play your move'
-
+    buttons = []
+    buttons.append(Button(pygame.Rect(640, 640, 100, 40), (46, 125, 50), BG_COLOR, 'Exit'))
+    mousex, mousey = (0,0)
     while not reversi.is_game_over():
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
+            elif event.type == MOUSEMOTION:
+                mousex, mousey = event.pos
             elif event.type == MOUSEBUTTONUP:
+                for button in buttons:
+                    if button.rectang.collidepoint(event.pos):
+                        pygame.quit()
+                        sys.exit()
                 mousex, mousey = event.pos
                 row = mousey // 80
                 col = mousex // 80
@@ -96,6 +174,7 @@ def main():
         draw_status()
         draw_count(reversi)
         draw_board(reversi)
+        draw_buttons(buttons, mousex, mousey)
         pygame.display.update()
         fps.tick(30)
     if reversi.winner == BLACK:
@@ -110,12 +189,20 @@ def main():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
+            elif event.type == MOUSEMOTION:
+                mousex, mousey = event.pos
+            elif event.type == MOUSEBUTTONUP:
+                for button in buttons:
+                    if button.rectang.collidepoint(event.pos):
+                        pygame.quit()
+                        sys.exit()
         pygame.draw.rect(WINDOW, BG_COLOR, ( 1, 640 + 1, 638, 38))
         draw_status()
         draw_board(reversi)
         alpha = WINDOW.convert_alpha()
         alpha.blit(pic,(0,0))
         WINDOW.blit(alpha,(0,0))
+        draw_buttons(buttons, mousex, mousey)
         pygame.display.update()
         fps.tick(30)
 if __name__ == '__main__':
