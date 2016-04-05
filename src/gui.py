@@ -92,18 +92,24 @@ def draw_whose_turn(r):
     fontObj = pygame.font.SysFont('linuxlibertinedisplayo', 18)
     if r.turn == BLACK:
         turn = "Black's Turn"
+        textSurfaceObj = fontObj.render(turn, True, W_COLOR, B_COLOR)
     else:
         turn = "White's Turn"
-    textSurfaceObj = fontObj.render(turn, True, B_COLOR, BG_COLOR)
+        textSurfaceObj = fontObj.render(turn, True, B_COLOR, W_COLOR)
     textRectObj = textSurfaceObj.get_rect()
     textRectObj.center = (160, 660)
+    if r.turn == BLACK:
+        pygame.draw.rect(WINDOW, B_COLOR, (textRectObj.left, 640 + 1, textRectObj.right - textRectObj.left, 38))
+    else:
+        pygame.draw.rect(WINDOW, W_COLOR, (textRectObj.left, 640 + 1, textRectObj.right - textRectObj.left, 38))
     WINDOW.blit(textSurfaceObj, textRectObj)
 
 def draw_status():
     fontObj = pygame.font.SysFont('linuxlibertinedisplayo', 18)
-    textSurfaceObj = fontObj.render(status, True, B_COLOR, BG_COLOR)
+    textSurfaceObj = fontObj.render(status, True, B_COLOR, (46, 125, 60))
     textRectObj = textSurfaceObj.get_rect()
     textRectObj.center = (480, 660)
+    pygame.draw.rect(WINDOW, (46, 125, 60), (textRectObj.left, 640 + 1, textRectObj.right - textRectObj.left, 38))
     WINDOW.blit(textSurfaceObj, textRectObj)
 
 def draw_count(r):
