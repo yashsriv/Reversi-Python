@@ -206,6 +206,15 @@ def start_game():
                     reversi.change_turn()
                     reversi.calc_legal_moves()
                     STATUS = 'Please Play your move'
+                    if not TWO_PLAYER:
+                        STATUS = 'I am thinking'
+                        draw_status()
+                        draw_count(reversi)
+                        draw_board(reversi)
+                        pygame.display.update()
+                        # reversi.computer_move()
+                        reversi.change_turn()
+                        reversi.calc_legal_moves()
                 else:
                     STATUS = 'Invalid Move'
         pygame.draw.rect(WINDOW, BG_COLOR, (1, 640 + 1, 638, 38))
