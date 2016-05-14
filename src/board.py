@@ -1,6 +1,7 @@
 """
 Module which contains the definition of board and board constants
 """
+import random
 EMPTY = 'empty'
 BLACK = 'black'
 WHITE = 'white'
@@ -14,6 +15,17 @@ WEIGHTS = [[1, 1, 1, 1, 1, 1, 1, 1],
            [1, 1, 1, 1, 1, 1, 1, 1],
            [1, 1, 1, 1, 1, 1, 1, 1],
            [1, 1, 1, 1, 1, 1, 1, 1]]
+
+def other(color):
+    """
+    Returns opposite color of color
+    Useful for flipping
+    """
+    if color == WHITE:
+        return BLACK
+    else:
+        return WHITE
+
 
 class Move():
     """
@@ -394,18 +406,12 @@ class board():
             current_col += 1
         self.moves.append(current_move)
 
-    def other(self, color):
-        if color == WHITE:
-            return BLACK
-        else:
-            return WHITE
-
     def flip_tokens(self, list_moves):
         """
         Flips token at a certain positions to current color
         """
         for pos in list_moves:
-            self.b[pos[0]][pos[1]] = self.other(self.b[pos[0]][pos[1]])
+            self.b[pos[0]][pos[1]] = other(self.b[pos[0]][pos[1]])
 
     def undo_move(self):
         """
@@ -426,11 +432,43 @@ class board():
                     score += WEIGHTS[i][j]
                 else:
                     score -= WEIGHTS[i][j]
+        return score
+
+    def _get_random_move(self):
+        """
+        Returns a random move from the list of available moves
+        """
+        return random.choice(self.legal_moves)
 
     def computer_move(self):
         """
         Makes a move
         """
-        import random
-        (r, c) = random.choice(self.legal_moves)
-        self.make_move(r, c)
+        # (row, col) = self._get_random_move()
+        bmov, sco = self._get_best_move(0, 3)
+        (row, col) = bmov
+        self.make_move(row, col)
+
+    def _get_best_move(self, depth, max_depth):
+        """
+        Fetches best move
+        """
+        if self.is_game_over() or depth == max_depth:
+            return None, self.evaluate_board()
+        bmov = None
+        # As low as possible
+        score = -1000
+        for move in self.legal_moves:
+            self.make_move(move[0], move[1])
+            self.change_turn()
+            self.calc_legal_moves()
+            mov, sco = self._get_best_move(depth + 1, max_depth)
+            sco = -sco
+            if sco > score:
+                score = sco
+                bmov = move
+            self.undo_move()
+            self.change_turn()
+            self.calc_legal_moves()
+        return bmov, score
+
