@@ -206,13 +206,13 @@ def start_game():
                     reversi.change_turn()
                     reversi.calc_legal_moves()
                     STATUS = 'Please Play your move'
-                    if not TWO_PLAYER:
+                    if not TWO_PLAYER and not reversi.is_game_over():
                         STATUS = 'I am thinking'
                         draw_status()
                         draw_count(reversi)
                         draw_board(reversi)
                         pygame.display.update()
-                        # reversi.computer_move()
+                        reversi.computer_move()
                         reversi.change_turn()
                         reversi.calc_legal_moves()
                 else:
