@@ -445,8 +445,7 @@ class board():
         Makes a move
         """
         # (row, col) = self._get_random_move()
-        bmov, sco = self._get_best_move(0, 3)
-        (row, col) = bmov
+        (row, col) = self._get_best_move(0, 3)
         self.make_move(row, col)
 
     def _get_best_move(self, depth, max_depth):
@@ -454,7 +453,7 @@ class board():
         Fetches best move
         """
         if self.is_game_over() or depth == max_depth:
-            return None, self.evaluate_board()
+            return self.evaluate_board()
         bmov = None
         # As low as possible
         score = -1000
@@ -462,7 +461,7 @@ class board():
             self.make_move(move[0], move[1])
             self.change_turn()
             self.calc_legal_moves()
-            mov, sco = self._get_best_move(depth + 1, max_depth)
+            sco = self._get_best_move(depth + 1, max_depth)
             sco = -sco
             if sco > score:
                 score = sco
@@ -470,5 +469,8 @@ class board():
             self.undo_move()
             self.change_turn()
             self.calc_legal_moves()
-        return bmov, score
+        if depth == 0:
+            return bmov
+        else:
+            return score
 
