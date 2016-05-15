@@ -5,16 +5,15 @@ import random
 EMPTY = 'empty'
 BLACK = 'black'
 WHITE = 'white'
-# Simple constant weightage
-# TODO: Apply better weights
-WEIGHTS = [[1, 1, 1, 1, 1, 1, 1, 1],
-           [1, 1, 1, 1, 1, 1, 1, 1],
-           [1, 1, 1, 1, 1, 1, 1, 1],
-           [1, 1, 1, 1, 1, 1, 1, 1],
-           [1, 1, 1, 1, 1, 1, 1, 1],
-           [1, 1, 1, 1, 1, 1, 1, 1],
-           [1, 1, 1, 1, 1, 1, 1, 1],
-           [1, 1, 1, 1, 1, 1, 1, 1]]
+# Advanced weightage
+WEIGHTS = [[10000, -3000, 1000,  800,  800, 1000, -3000, 10000],
+           [-3000, -5000, -450, -500, -500, -450, -5000, -3000],
+           [ 1000,  -450,   30,   10,   10,   30,  -450,  1000],
+           [  800,  -500,   10,   50,   50,   10,  -500,   800],
+           [  800,  -500,   10,   50,   50,   10,  -500,   800],
+           [ 1000,  -450,   30,   10,   10,   30,  -450,  1000],
+           [-3000, -5000, -450, -500, -500, -450, -5000, -3000],
+           [10000, -3000, 1000,  800,  800, 1000, -3000, 10000]]
 
 def other(color):
     """
@@ -428,11 +427,11 @@ class board():
         score = 0
         for i in range(8):
             for j in range(8):
-                if self.b[i][j] == BLACK:
+                if self.b[i][j] == self.turn:
                     score += WEIGHTS[i][j]
                 else:
                     score -= WEIGHTS[i][j]
-        return score
+        return -score
 
     def _get_random_move(self):
         """
@@ -453,10 +452,11 @@ class board():
         Fetches best move
         """
         if self.is_game_over() or depth == max_depth:
+            print("depth == " + str(max_depth) + " Player = " + self.turn + " Score = " + str(self.evaluate_board()))
             return self.evaluate_board()
         bmov = None
         # As low as possible
-        score = -1000
+        score = -1000000
         for move in self.legal_moves:
             self.make_move(move[0], move[1])
             self.change_turn()
