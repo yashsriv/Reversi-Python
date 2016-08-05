@@ -431,7 +431,7 @@ class board():
                     score += WEIGHTS[i][j]
                 else:
                     score -= WEIGHTS[i][j]
-        return -score
+        return +score
 
     def _get_random_move(self):
         """
@@ -444,7 +444,7 @@ class board():
         Makes a move
         """
         # (row, col) = self._get_random_move()
-        (row, col) = self._get_best_move(0, 3)
+        (row, col) = self._get_best_move(0, 4)
         self.make_move(row, col)
 
     def _get_best_move(self, depth, max_depth):
@@ -452,7 +452,7 @@ class board():
         Fetches best move
         """
         if self.is_game_over() or depth == max_depth:
-            print("depth == " + str(max_depth) + " Player = " + self.turn + " Score = " + str(self.evaluate_board()))
+            # print("depth == " + str(max_depth) + " Player = " + self.turn + " Score = " + str(self.evaluate_board()))
             return self.evaluate_board()
         bmov = None
         # As low as possible
