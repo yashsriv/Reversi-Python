@@ -109,6 +109,9 @@ def draw_board(r):
                 pygame.draw.circle(WINDOW, W_COLOR, (j * 80 + 40, i * 80 + 40), 30)
             elif r.b[i][j] == BLACK:
                 pygame.draw.circle(WINDOW, B_COLOR, (j * 80 + 40, i * 80 + 40), 30)
+    for (x, y) in r.legal_moves:
+        pygame.draw.circle(WINDOW, (0, 150, 136), (y * 80 + 40, x * 80 + 40), 30)
+
 
 def draw_whose_turn(r):
     """
@@ -205,7 +208,6 @@ def start_game():
                     reversi.make_move(row, col)
                     reversi.change_turn()
                     reversi.calc_legal_moves()
-                    STATUS = 'Please Play your move'
                     if not TWO_PLAYER and not reversi.is_game_over():
                         STATUS = 'I am thinking'
                         draw_status()
@@ -215,6 +217,7 @@ def start_game():
                         reversi.computer_move()
                         reversi.change_turn()
                         reversi.calc_legal_moves()
+                    STATUS = 'Please Play your move'
                 else:
                     STATUS = 'Invalid Move'
         pygame.draw.rect(WINDOW, BG_COLOR, (1, 640 + 1, 638, 38))
